@@ -1,13 +1,15 @@
-import Header from "./components/Header";
+import { Layout } from 'antd';
 
-function App() {
-    const name = 'Brad';
-    const x = true;
-    return (
-        <div className='container'>
-            <h1>Hello Erbol jetim sen jetim</h1>
-        </div>
-    );
-}
+import NavigationBar from './components/NavigationBar';
+import Home from './components/Home';
+import './components/components.css';
 
-export default App;     
+const App = () => (
+  <>
+    <Layout className='layout'>
+      <NavigationBar />
+      <Home />
+    </Layout>
+  </>
+);
+export default App;
