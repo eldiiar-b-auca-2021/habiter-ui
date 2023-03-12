@@ -1,22 +1,32 @@
+import { Layout } from 'antd';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
-import { Layout, Switch } from 'antd';
-import NavBar from './components/NavBar';
 import Home from './components/Home';
 import RegistrationPage from './components/RegistrationPage';
-import { Route } from 'react-router-dom';
+
+const { Content } = Layout;
+
 const App = () => {
+  const path = window.location.pathname;
+  let content;
+
+  if (path === '/main') {
+    content = <Home />;
+  } else {
+    content = <RegistrationPage />;
+
+  }
+
+
   return (
-    <Switch>
-      <Route path="/register">
-        <RegistrationPage />
-      </Route>
-      <Route path="/">
-        <Layout className='container' style={{ height: '100vh' }}>
-          <NavBar />
-          <Home />
-        </Layout>
-      </Route>
-    </Switch>
+    <BrowserRouter>
+      <Layout className='container'>
+        <Content>
+          {content}
+        </Content>
+      </Layout>
+    </BrowserRouter>
   );
 };
+
 export default App;

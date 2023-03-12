@@ -15,6 +15,7 @@ const Top = () => {
             style={{
                 padding: 0,
                 background: colorBgContainer,
+                margin: 0
             }}
         >
             {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
