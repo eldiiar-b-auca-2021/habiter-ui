@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import Home from './components/Home';
 import RegistrationPage from './components/RegistrationPage';
-
+import './css/main.css'
 const { Content } = Layout;
 
 const App = () => {
@@ -20,7 +20,7 @@ const App = () => {
 
   return (
     <BrowserRouter>
-      <Layout className='container'>
+      <Layout className='container' style={{ marginLeft: 0, marginRight: 0 }} >
         <Content>
           {content}
         </Content>

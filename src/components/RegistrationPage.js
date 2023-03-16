@@ -7,10 +7,27 @@ const { Title } = Typography;
 const RegistrationPage = () => {
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
-
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const onFinish = (values) => {
         setLoading(true);
-        // Make API call to register user with provided information
+        fetch('http://localhost:8080/student/add', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, password })
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert('Student added successfully!');
+                    setName('');
+                    setEmail('');
+                    setPassword('');
+                } else {
+                    alert('Failed to add student!');
+                }
+            })
+            .catch(error => console.log(error));
         console.log(`Registering user with email: ${values.email}, password: ${values.password}, name: ${values.name}`);
         setLoading(false);
     };
@@ -94,6 +111,10 @@ const RegistrationPage = () => {
                         Create Account
                     </Button>
                 </Form.Item>
+                {/* <span style={{ display: 'inline-block', margin: '0 8px' }}>or</span> */}
+                <Button type="default" onClick={() => console.log('Clicked login button')} block>
+                    Login
+                </Button>
             </Form>
         </div>
     );
