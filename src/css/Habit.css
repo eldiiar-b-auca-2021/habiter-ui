@@ -1,0 +1,37 @@
+.repeat-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.circle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    cursor: pointer;
+    position: relative;
+}
+
+.circle::before {
+    content: "";
+    display: block;
+    width: 8px;
+    height: 8px;
+    background-color: #ccc;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.circle.selected::before {
+    background-color: #1890ff;
+}
+
+.circle-label {
+    margin-top: 10px;
+    text-align: center;
+    font-size: 12px;
+}
