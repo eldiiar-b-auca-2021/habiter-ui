@@ -2,6 +2,7 @@ import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import { Button, Layout, theme } from 'antd';
 import React, { useState, useEffect, useRef } from 'react';
 import HabitCard from './HabitCard';
+import TypeOfHabit from './TypeOfHabit';
 const { Header } = Layout;
 
 const Top = () => {
@@ -85,7 +86,7 @@ const Top = () => {
                     }}
                 >
                     <div ref={cardRef}>
-                        <HabitCard />
+                        <TypeOfHabit />
                     </div>
                 </div>
             )}

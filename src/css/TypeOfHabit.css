@@ -1,0 +1,12 @@
+.habit-card-container {
+    position: relative;
+    height: 300px;
+    /* Change this value based on the height of the TypeOfHabit card */
+}
+
+.habit-card-container .div {
+    position: absolute;
+    top: 16px;
+    /* Set this value based on the height of the TypeOfHabit card */
+    left: 0;
+}
