@@ -14,10 +14,10 @@ const TypeOfHabit = () => {
     const renderContent = () => {
         if (habitType === 'custom') {
             return <HabitCard />;
-        } else if (habitType === 'boolean') {
-            return <HabitCardForBooleanType />
+        }else if(habitType === 'boolean'){
+            return <HabitCardForBooleanType/>
         }
-        else {
+         else {
             return (
                 <Card title="Type of Habit"
                     style={{
