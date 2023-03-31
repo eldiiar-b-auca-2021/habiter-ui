@@ -1,68 +1,82 @@
+import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import { Button, Layout, theme } from 'antd';
-import { Modal } from 'antd';
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import TypeOfHabit from './TypeOfHabit';
 const { Header } = Layout;
+
 const Top = () => {
-
-    const [visible, setVisible] = useState(false);
-
-    const showModal = () => {
-        setVisible(true);
-    };
-
-    const handleOk = () => {
-        // Handle form submission logic here
-        setVisible(false);
-    };
-
-    const handleCancel = () => {
-        setVisible(false);
-    };
-
+    const [collapsed, setCollapsed] = useState(false);
+    const [showAddCard, setShowAddCard] = useState(false);
     const cardRef = useRef(null);
     const {
         token: { colorBgContainer },
     } = theme.useToken();
-
+    const handleAddCard = () => {
+        setShowAddCard(true);
+    }
+    useEffect(() => {
+        const handleClick = (event) => {
+            const isInsideCard = cardRef.current && cardRef.current.contains(event.target);
+            const isInsideAddButton = event.target.closest('button') === document.querySelector('button');
+            if (!isInsideCard && !isInsideAddButton) {
+                setShowAddCard(false);
+            }
+        };
+        document.addEventListener('click', handleClick);
+        return () => {
+            document.removeEventListener('click', handleClick);
+        };
+    }, []);
     return (
         <Header
             style={{
                 padding: 0,
                 background: colorBgContainer,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
+                margin: 0,
+                width: "100%",
+                height: 80
             }}
         >
-            <div style={{ display: "flex", alignItems: "center" }}>
-            </div>
+            {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
+                className: 'trigger',
+                onClick: () => setCollapsed(!collapsed),
+            })}
             <Button
                 style={{
-                    marginRight: 20,
+                    padding: 0,
+                    marginTop: 2,
+                    marginLeft: 1000,
+                    marginRight: '16px',
                     borderRadius: '10%',
-                    fontSize: '20px',
-                    width: 100,
-                    height: 50,
+                    fontSize: '32px',
+                    width: 120,
+                    height: 70,
                 }}
-                onClick={showModal}
+                onClick={handleAddCard}
             >
                 Add
             </Button>
-            <Modal
-                visible={visible}
-                title="Type of Habit"
-                okText="Save"
-                cancelText="Cancel"
-                onOk={handleOk}
-                onCancel={handleCancel}
-            >
-                <div ref={cardRef}>
-                    <TypeOfHabit />
+            {showAddCard && (
+                <div
+                    style={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        width: "100vw",
+                        height: "100vh",
+                        background: "rgba(0, 0, 0, 0.5)",
+                        zIndex: 1,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                    }}
+                >
+                    <div ref={cardRef}>
+                        <TypeOfHabit />
+                    </div>
                 </div>
-            </Modal>
+            )}
         </Header>
     );
 };
-
 export default Top;
