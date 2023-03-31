@@ -1,23 +1,25 @@
-import { Card, Button } from 'antd';
+import { Button } from 'antd';
 import { useState } from 'react';
 import HabitCard from './HabitCard';
 import '../css/TypeOfHabit.css';
 import HabitCardForBooleanType from './HabitCardForBooleanType';
 
 const TypeOfHabit = () => {
-    const [habitType, setHabitType] = useState('');
+    const [showHabitCard, setShowHabitCard] = useState(false);
+    const [showBooleanHabitCard, setShowBooleanHabitCard] = useState(false);
 
-    const handleTypeChange = (e) => {
-        setHabitType(e.target.value);
+    const handleCustomHabitClick = () => {
+        setShowBooleanHabitCard(false);
+        setShowHabitCard(!showHabitCard);
     }
 
     const renderContent = () => {
         if (habitType === 'custom') {
             return <HabitCard />;
-        }else if(habitType === 'boolean'){
-            return <HabitCardForBooleanType/>
+        } else if (habitType === 'boolean') {
+            return <HabitCardForBooleanType />
         }
-         else {
+        else {
             return (
                 <Card title="Type of Habit"
                     style={{
