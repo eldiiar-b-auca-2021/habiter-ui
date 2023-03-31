@@ -1,51 +1,34 @@
-import { Card, Button } from 'antd';
+import { Button } from 'antd';
 import { useState } from 'react';
 import HabitCard from './HabitCard';
 import '../css/TypeOfHabit.css';
 import HabitCardForBooleanType from './HabitCardForBooleanType';
 
 const TypeOfHabit = () => {
-    const [habitType, setHabitType] = useState('');
+    const [showHabitCard, setShowHabitCard] = useState(false);
+    const [showBooleanHabitCard, setShowBooleanHabitCard] = useState(false);
 
-    const handleTypeChange = (e) => {
-        setHabitType(e.target.value);
+    const handleCustomHabitClick = () => {
+        setShowBooleanHabitCard(false);
+        setShowHabitCard(!showHabitCard);
     }
 
-    const renderContent = () => {
-        if (habitType === 'custom') {
-            return <HabitCard />;
-        } else if (habitType === 'boolean') {
-            return <HabitCardForBooleanType />
-        }
-        else {
-            return (
-                <Card title="Type of Habit"
-                    style={{
-                        width: 300,
-                        textAlign: 'center',
-                        padding: 16
-                    }}
-                    onClick={(e) => {
-                        e.stopPropagation();
-                    }}>
-                    <Button.Group style={{ display: 'flex', flexDirection: 'column' }}>
-                        <Button style={{ fontSize: 16, marginBottom: 8 }} onClick={() => setHabitType('boolean')}>
-                            Yes/No
-                        </Button>
-
-                        <Button style={{ fontSize: 16 }} onClick={() => setHabitType('custom')}>
-                            Custom Habit
-                        </Button>
-                    </Button.Group>
-                </Card>
-            );
-        }
-    };
+    const handleBooleanHabitClick = () => {
+        setShowHabitCard(false);
+        setShowBooleanHabitCard(!showBooleanHabitCard);
+    }
 
     return (
-        <div className="type-of-habit-container">
-            {renderContent()}
-        </div>
+        <Button.Group style={{ display: 'flex', flexDirection: 'column' }}>
+            <Button style={{ fontSize: 16, marginBottom: 8 }} onClick={handleBooleanHabitClick}>
+                Yes/No
+            </Button>
+            {showBooleanHabitCard && <HabitCardForBooleanType />}
+            <Button style={{ fontSize: 16 }} onClick={handleCustomHabitClick}>
+                Custom Habit
+            </Button>
+            {showHabitCard && <HabitCard />}
+        </Button.Group>
     );
 }
 
