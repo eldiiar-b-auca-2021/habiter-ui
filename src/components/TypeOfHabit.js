@@ -13,22 +13,41 @@ const TypeOfHabit = () => {
         setShowHabitCard(!showHabitCard);
     }
 
-    const handleBooleanHabitClick = () => {
-        setShowHabitCard(false);
-        setShowBooleanHabitCard(!showBooleanHabitCard);
-    }
+    const renderContent = () => {
+        if (habitType === 'custom') {
+            return <HabitCard />;
+        } else if (habitType === 'boolean') {
+            return <HabitCardForBooleanType />
+        }
+        else {
+            return (
+                <Card title="Type of Habit"
+                    style={{
+                        width: 300,
+                        textAlign: 'center',
+                        padding: 16
+                    }}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                    }}>
+                    <Button.Group style={{ display: 'flex', flexDirection: 'column' }}>
+                        <Button style={{ fontSize: 16, marginBottom: 8 }} onClick={() => setHabitType('boolean')}>
+                            Yes/No
+                        </Button>
+
+                        <Button style={{ fontSize: 16 }} onClick={() => setHabitType('custom')}>
+                            Custom Habit
+                        </Button>
+                    </Button.Group>
+                </Card>
+            );
+        }
+    };
 
     return (
-        <Button.Group style={{ display: 'flex', flexDirection: 'column' }}>
-            <Button style={{ fontSize: 16, marginBottom: 8 }} onClick={handleBooleanHabitClick}>
-                Yes/No
-            </Button>
-            {showBooleanHabitCard && <HabitCardForBooleanType />}
-            <Button style={{ fontSize: 16 }} onClick={handleCustomHabitClick}>
-                Custom Habit
-            </Button>
-            {showHabitCard && <HabitCard />}
-        </Button.Group>
+        <div className="type-of-habit-container">
+            {renderContent()}
+        </div>
     );
 }
 
