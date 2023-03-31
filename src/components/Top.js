@@ -61,7 +61,6 @@ const Top = () => {
                     <TypeOfHabit />
                 </div>
             </Modal>
-
         </Header>
     );
 };
