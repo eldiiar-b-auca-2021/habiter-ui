@@ -29,20 +29,38 @@ const IntroductionPage = (props) => {
     const handleLogin = (values) => {
         console.log('Success:', values);
         setIsLogin(true);
+        fetch('http://localhost:8080/api/auth/signin', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(values)
+        })
+            .then(response => {
+                console.log(response)
+                if (response.ok) {
+                    console.log(response.data)
+                    alert('User logged in successfully!');
+                    navigate('/home');
+                } else {
+                    console.log("failed")
+                }
+            })
+            .catch(error => console.log(error));
 
     };
 
     const handleSignUp = (values) => {
-        navigate('/home');
+        console.log(values)
         setIsSignUp(false);
         setLoading(true);
-        fetch('http://localhost:8080/user/add', {
+        fetch('http://localhost:8080/api/auth/singup', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, email, password })
+            body: JSON.stringify(values)
         })
             .then(response => {
+                console.log(response)
                 if (response.ok) {
+                    console.log(response.data)
                     alert('User added successfully!');
                     setName('');
                     setEmail('');
@@ -63,12 +81,25 @@ const IntroductionPage = (props) => {
                 <Card title="Sign Up">
                     <Form {...layout} onFinish={handleSignUp}>
                         <Form.Item
-                            label="Username"
-                            name="username"
+                            label="Firstname"
+                            name="firstname"
                             rules={[
                                 {
                                     required: true,
-                                    message: 'Please input your username!',
+                                    message: 'Please input your firstname!',
+                                },
+                            ]}
+                        >
+                            <Input />
+                        </Form.Item>
+
+                        <Form.Item
+                            label="Lastname"
+                            name="lastname"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Please input your lastname!',
                                 },
                             ]}
                         >
