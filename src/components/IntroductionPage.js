@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Card, Form, Input } from 'antd';
 import { useNavigate } from 'react-router-dom';
 
@@ -18,17 +18,16 @@ const tailLayout = {
     },
 };
 
-const IntroductionPage = (props) => {
+const IntroductionPage = () => {
     const navigate = useNavigate();
     const [isSignUp, setIsSignUp] = useState(false);
-    const [isLogin, setIsLogin] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [isAuthorized, setIsAuthorized] = useState(false);
+    const [token, setToken] = useState('');
+    const [name, setName] = useState('')
     const handleLogin = (values) => {
         console.log('Success:', values);
-        setIsLogin(true);
+        setLoading(true);
         fetch('http://localhost:8080/api/auth/signin', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -37,43 +36,62 @@ const IntroductionPage = (props) => {
             .then(response => {
                 console.log(response)
                 if (response.ok) {
-                    console.log(response.data)
-                    alert('User logged in successfully!');
-                    navigate('/home');
-                } else {
-                    console.log("failed")
+                    response.json().then(data => {
+                        console.log(data)
+                        if (data) {
+
+                            console.log(data.map.token)
+                            window.localStorage.setItem('token', data.token);
+                            const expirationTime = new Date().getTime() + 30 * 60 * 1000;
+                            window.localStorage.setItem('email', data.email)
+                            window.localStorage.setItem('id', data.id)
+                            window.localStorage.setItem('tokenExpiration', expirationTime);
+                            window.localStorage.setItem('fullName', data.fullName);
+                            setIsAuthorized(true);
+                            navigate('/home');
+                        }
+                    })
                 }
             })
-            .catch(error => console.log(error));
-
+            .catch(error => console.log(error))
+            .finally(() => setLoading(false));
     };
 
     const handleSignUp = (values) => {
-        console.log(values)
-        setIsSignUp(false);
+        console.log(values);
         setLoading(true);
-        fetch('http://localhost:8080/api/auth/singup', {
+        fetch('http://localhost:8080/api/auth/signup', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(values)
+            body: JSON.stringify(values),
         })
-            .then(response => {
-                console.log(response)
+            .then((response) => {
+                console.log(response);
                 if (response.ok) {
-                    console.log(response.data)
+                    // console.log(response.data);
                     alert('User added successfully!');
-                    setName('');
-                    setEmail('');
-                    setPassword('');
-                    navigate('/home');
+                    setIsSignUp(false);
                 } else {
-                    alert('User to add student!');
+                    alert('Failed to add user!');
                 }
             })
-            .catch(error => console.log(error));
-        console.log(`Registering user with email: ${values.email}, password: ${values.password}, name: ${values.name}`);
-        setLoading(false);
+            .catch((error) => console.log(error))
+            .finally(() => setLoading(false));
     };
+
+    useEffect(() => {
+        const token = window.localStorage.getItem('token');
+        const tokenExpiration = window.localStorage.getItem('tokenExpiration');
+        if (token && new Date().getTime() < tokenExpiration) {
+            setIsAuthorized(true);
+            setToken(token);
+            navigate('/home');
+        } else {
+            setIsAuthorized(false);
+            window.localStorage.removeItem('token');
+            window.localStorage.removeItem('tokenExpiration');
+        }
+    }, []);
 
     const renderContent = () => {
         if (isSignUp) {
@@ -133,24 +151,19 @@ const IntroductionPage = (props) => {
                         </Form.Item>
 
                         <Form.Item {...tailLayout}>
-                            <Button type="primary" htmlType="submit" >
-                                Sign Up
-                            </Button>
-                            <Button onClick={() => setIsSignUp(false)}>Cancel</Button>
+                            <div>
+                                <Button type="primary" htmlType="submit" loading={loading}>
+                                    Submit
+                                </Button>
+                                <Button onClick={() => setIsSignUp(false)}>Cancel</Button>
+                            </div>
                         </Form.Item>
                     </Form>
-                </Card>
-            );
-        } else if (isLogin) {
-            return (
-                <Card title="Welcome back">
-                    <p>You have successfully logged in!</p>
                 </Card>
             );
         } else {
             return (
                 <Card title="Welcome to Habiter">
-                    <p>Track your habits and achieve your goals</p>
                     <Form {...layout} onFinish={handleLogin}>
                         <Form.Item
                             label="Email"
@@ -158,7 +171,7 @@ const IntroductionPage = (props) => {
                             rules={[
                                 {
                                     required: true,
-                                    message: 'Please input your email!',
+                                    message: 'Please input your username!',
                                 },
                             ]}
                         >
@@ -179,16 +192,19 @@ const IntroductionPage = (props) => {
                         </Form.Item>
 
                         <Form.Item {...tailLayout}>
-                            <Button type="primary" htmlType="submit">
-                                Login
-                            </Button>
-                            <Button onClick={() => setIsSignUp(true)}>Sign Up</Button>
+                            <div>
+                                <Button type="primary" htmlType="submit" loading={loading}>
+                                    Login
+                                </Button>
+                                <Button onClick={() => setIsSignUp(true)}>Sign Up</Button>
+                            </div>
                         </Form.Item>
                     </Form>
                 </Card>
             );
         }
     };
+
 
     return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>{renderContent()}</div>;
 };
